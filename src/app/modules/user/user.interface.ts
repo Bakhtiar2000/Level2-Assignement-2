@@ -18,16 +18,17 @@ export type TOrder = {
 };
 
 export type TUser = {
-  userId: string;
-  userName: string;
+  userId: number;
+  username: string;
   password: string;
   fullName: TFullName;
   age: number;
   email: string;
   isActive: boolean;
-  hobbies: string[];
+  hobbies?: string[];
   address: TAddress;
   orders: TOrder[];
+  isDeleted?: boolean;
 };
 
 export interface UserModel extends Model<TUser> {
