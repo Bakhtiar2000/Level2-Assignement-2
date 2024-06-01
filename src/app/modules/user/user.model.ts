@@ -112,12 +112,9 @@ const userSchema = new Schema<TUser, UserModel>(
 );
 
 //Virtual
-userSchema.virtual("fullName").get(function () {
+userSchema.virtual("name").get(function () {
   return `${this.fullName.firstName} ${this.fullName.lastName}`;
 });
-
-//Student Model
-export const User = model<TUser, UserModel>("User", userSchema);
 
 // Middleware / Hook
 userSchema.pre("save", async function (next) {
@@ -148,3 +145,6 @@ userSchema.statics.isUserExists = async function (id: number) {
   const existingUser = await User.findOne({ userId: id });
   return existingUser;
 };
+
+//Student Model
+export const User = model<TUser, UserModel>("User", userSchema);
