@@ -81,10 +81,10 @@ const getSingleUser = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Something went wrong",
       error: {
         code: 404,
-        description: "User not found!",
+        description: "Something went wrong!",
       },
     });
   }
@@ -126,10 +126,10 @@ const deleteUser = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Something went wrong",
       error: {
         code: 404,
-        description: "User not found!",
+        description: "Something went wrong!",
       },
     });
   }
@@ -177,10 +177,10 @@ const updateUser = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Something went wrong",
       error: {
         code: 404,
-        description: "User not found!",
+        description: "Something went wrong!",
       },
     });
   }
@@ -228,10 +228,56 @@ const addNewOrder = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Something went wrong",
       error: {
         code: 404,
-        description: "User not found!",
+        description: "Something went wrong!",
+      },
+    });
+  }
+};
+
+// get all order controller
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user id",
+        error: {
+          code: 400,
+          description: "User id must be a number!",
+        },
+      });
+    }
+    const result = await userServices.getAllOrdersFromDB(numericId);
+    console.log(result);
+    if (result == null) {
+      res.status(500).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "Order fetched successfully",
+        data: result,
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong",
+      error: {
+        code: 404,
+        description: "Something went wrong!",
       },
     });
   }
@@ -244,4 +290,5 @@ export const userControllers = {
   deleteUser,
   updateUser,
   addNewOrder,
+  getAllOrders,
 };
