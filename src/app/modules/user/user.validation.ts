@@ -20,7 +20,7 @@ const addressValidationSchema = z.object({
 });
 
 // Order Validation Schema
-const orderValidationSchema = z.object({
+export const orderValidationSchema = z.object({
   productName: z.string(),
   price: z.number().positive(),
   quantity: z.number().int().positive(),

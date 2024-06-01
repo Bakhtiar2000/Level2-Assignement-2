@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import userValidationSchema from "./user.validation";
+import userValidationSchema, { orderValidationSchema } from "./user.validation";
 import { userServices } from "./user.service";
 
 // Create user controller
@@ -107,7 +107,7 @@ const deleteUser = async (req: Request, res: Response) => {
     }
     const result = await userServices.deleteUserFromDB(numericId);
 
-    if (result.modifiedCount == 0) {
+    if (result == null) {
       res.status(500).json({
         success: false,
         message: "User not found",
@@ -120,10 +120,112 @@ const deleteUser = async (req: Request, res: Response) => {
       res.status(200).json({
         success: true,
         message: "user deleted successfully",
-        data: result,
+        data: null,
       });
     }
   } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+  }
+};
+
+// Update user controller
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { user: userData } = req.body;
+    const { id } = req.params;
+    const validatedData = userValidationSchema.parse(userData);
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user id",
+        error: {
+          code: 400,
+          description: "User id must be a number!",
+        },
+      });
+    }
+    const result = await userServices.updateUserFromDB(
+      numericId,
+      validatedData
+    );
+
+    if (result == null) {
+      res.status(500).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "user updated successfully",
+        data: result,
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+  }
+};
+
+// Add order controller
+const addNewOrder = async (req: Request, res: Response) => {
+  try {
+    const userData = req.body;
+    const { id } = req.params;
+    const validatedData = orderValidationSchema.parse(userData);
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user id",
+        error: {
+          code: 400,
+          description: "User id must be a number!",
+        },
+      });
+    }
+    const result = await userServices.addNewOrderFromDB(
+      numericId,
+      validatedData
+    );
+
+    if (result == null) {
+      res.status(500).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "Order created successfully",
+        data: null,
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: "User not found",
@@ -140,4 +242,6 @@ export const userControllers = {
   getAllUsers,
   getSingleUser,
   deleteUser,
+  updateUser,
+  addNewOrder,
 };
