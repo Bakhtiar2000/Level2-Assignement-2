@@ -54,66 +54,54 @@ const orderSchema = new Schema<TOrder>({
 });
 
 // User Schema
-const userSchema = new Schema<TUser, UserModel>(
-  {
-    userId: {
-      type: Number,
-      required: [true, "User ID is required"],
-      unique: true,
-    },
-    username: {
-      type: String,
-      required: [true, "Username is required"],
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-    },
-    fullName: {
-      type: fullNameSchema,
-      required: [true, "Full name is required"],
-    },
-    age: {
-      type: Number,
-      required: [true, "Age is required"],
-    },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-    },
-    isActive: {
-      type: Boolean,
-      enum: ["active", "blocked"],
-      default: "active",
-    },
-    hobbies: {
-      type: [String],
-    },
-    address: {
-      type: addressSchema,
-      required: [true, "Address is required"],
-    },
-    orders: {
-      type: [orderSchema],
-      required: [true, "Orders are required"],
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
+const userSchema = new Schema<TUser, UserModel>({
+  userId: {
+    type: Number,
+    required: [true, "User ID is required"],
+    unique: true,
   },
-  {
-    toJSON: {
-      virtuals: true,
-    },
-  }
-);
-
-//Virtual
-userSchema.virtual("name").get(function () {
-  return `${this.fullName.firstName} ${this.fullName.lastName}`;
+  username: {
+    type: String,
+    required: [true, "Username is required"],
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+  },
+  fullName: {
+    type: fullNameSchema,
+    required: [true, "Full name is required"],
+  },
+  age: {
+    type: Number,
+    required: [true, "Age is required"],
+  },
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    unique: true,
+  },
+  isActive: {
+    type: Boolean,
+    enum: ["active", "blocked"],
+    default: "active",
+  },
+  hobbies: {
+    type: [String],
+  },
+  address: {
+    type: addressSchema,
+    required: [true, "Address is required"],
+  },
+  orders: {
+    type: [orderSchema],
+    required: [true, "Orders are required"],
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Middleware / Hook

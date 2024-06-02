@@ -283,6 +283,51 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+// get total price order controller
+const totalPriceOfOrders = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user id",
+        error: {
+          code: 400,
+          description: "User id must be a number!",
+        },
+      });
+    }
+    const result = await userServices.totalPriceOfOrdersFromDB(numericId);
+    if (result == null) {
+      res.status(500).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "Total price calculated successfully",
+        data: result,
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong",
+      error: {
+        code: 404,
+        description: "Something went wrong!",
+      },
+    });
+  }
+};
+
 export const userControllers = {
   createUser,
   getAllUsers,
@@ -291,4 +336,5 @@ export const userControllers = {
   updateUser,
   addNewOrder,
   getAllOrders,
+  totalPriceOfOrders,
 };

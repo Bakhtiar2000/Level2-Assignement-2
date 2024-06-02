@@ -62,6 +62,18 @@ const getAllOrdersFromDB = async (id: number) => {
   return result;
 };
 
+const totalPriceOfOrdersFromDB = async (id: number) => {
+  const existingUser = await User.isUserExists(id);
+  if (!existingUser) {
+    return null;
+  }
+  const fullOrder = await User.findOne({ userId: id }, { orders: 1, _id: 0 });
+  const totalPrice = fullOrder?.orders.reduce((total, order) => {
+    return total + (order.price || 0);
+  }, 0);
+  return { totalPrice };
+};
+
 export const userServices = {
   createUserIntoDB,
   getAllUsersFromDB,
@@ -70,4 +82,5 @@ export const userServices = {
   updateUserFromDB,
   addNewOrderFromDB,
   getAllOrdersFromDB,
+  totalPriceOfOrdersFromDB,
 };
