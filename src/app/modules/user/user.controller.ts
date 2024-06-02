@@ -253,7 +253,6 @@ const getAllOrders = async (req: Request, res: Response) => {
       });
     }
     const result = await userServices.getAllOrdersFromDB(numericId);
-    console.log(result);
     if (result == null) {
       res.status(500).json({
         success: false,
